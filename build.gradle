@@ -20,7 +20,7 @@ buildscript {
 
 group "org.grails"
 // version "7.0.0.RELEASE"
-version "7.0.1.BUILD-SNAPSHOT"
+version "7.1.0.BUILD-SNAPSHOT"
 println "GORM VERSION = ${project.datastoreVersion}"
 
 ext {
@@ -36,7 +36,15 @@ ext {
 subprojects { project ->
 
     repositories {
+        //TODO: Remove mavenLocal once PR grails-data-mapping#1282 is merged
+        mavenLocal()
         maven { url "https://repo.grails.org/grails/core" }
+        if(groovyVersion && groovyVersion.endsWith('-SNAPSHOT')) {
+            maven {
+                name 'JFrog OSS snapshot repo'
+                url 'https://oss.jfrog.org/oss-snapshot-local/'
+            }
+        }
     }
 
     boolean usesGeb = ["grails3-neo4j", "grails3-neo4j-hibernate"].any { projectName -> project.name.contains(projectName) }
